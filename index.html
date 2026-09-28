@@ -68,6 +68,23 @@
       border: 1px solid var(--primary-color);
     }
 
+    /* 로그아웃 및 초기화 버튼 스타일 추가 */
+    .badge-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+    }
+    .reset-btn {
+      font-size: 0.75rem;
+      color: #777;
+      background: #eee;
+      border: 1px solid #ccc;
+      padding: 4px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     .login-card {
       background: #fff;
       padding: 25px 20px;
@@ -239,22 +256,6 @@
       border-radius: 10px; font-size: 1rem;
       font-weight: bold; cursor: pointer;
     }
-    /* 로그아웃 및 초기화 버튼 스타일 */
-    .badge-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 5px;
-    }
-    .reset-btn {
-      font-size: 0.75rem;
-      color: #777;
-      background: #eee;
-      border: 1px solid #ccc;
-      padding: 4px 8px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -269,7 +270,12 @@
     <button class="change-photo-btn" onclick="document.getElementById('imageInput').click()">📷 캐릭터 변경</button>
 
     <h1>✨ 10주 완성 가나 쓰기 연습</h1>
-    <div id="studentBadge" class="student-badge" style="display: none;"></div>
+    
+    <!-- 로그아웃/초기화 버튼 영역 -->
+    <div class="badge-wrapper" id="userArea" style="display: none;">
+      <div id="studentBadge" class="student-badge"></div>
+      <button class="reset-btn" onclick="resetUser()">로그아웃</button>
+    </div>
   </div>
 
   <!-- 학번/이름 입력 화면 -->
@@ -295,7 +301,7 @@
       <div class="sentence-display" id="japaneseText"></div>
       <div class="translation-display" id="koreanText"></div>
       
-      <textarea id="userInput" placeholder="히라가나/가타카나로 따라 써 보세요!"></textarea>
+      <textarea id="userInput" placeholder="히라가な/가타카나로 따라 써 보세요!"></textarea>
       
       <div class="feedback-msg" id="feedbackMsg"></div>
 
@@ -309,10 +315,10 @@
   <script>
     const sentences = {
       '1주차-1': { ja: "あきらめたら そこで しあい しゅうりょうですよ。", ko: "포기하면 거기서 시합 종료예요. (슬램덩크)" },
-      '1주차-2': { ja: "いきてる だけで、まるもうけ。", ko: "살아있는 것만으로도 남는 장사." },
-      '2주차-1': { ja: "にげちゃダメだ、にげちゃダメだ。", ko: "도망치면 안 돼, 도망치면 안 돼." },
+      '1주차-2': { ja: "わすれないから　きえや　しなしから。", ko: "잊지 않으니까 사라지지는 않으니까(요아소비,삼원색)." },
+      '2주차-1': { ja: "にげちゃだめだ、にげちゃだめだ。", ko: "도망치면 안 돼, 도망치면 안 돼." },
       '2주차-2': { ja: "くもの むこうは、いつも あおぞら。", ko: "구름 너머는 언제나 푸른 하늘." },
-      '3주차-1': { ja: "なんでも ない や。", ko: "아무것도 아니야. (너의 이름은.)" },
+      '3주차-1': { ja: "なんでも ないや。", ko: "아무것도 아니야. (너의 이름은.)" },
       '3주차-2': { ja: "きみの なまえは？", ko: "너의 이름은? (너의 이름은.)" },
       '4주차-1': { ja: "かいぞくおうに おれは なる！", ko: "나는 해적왕이 될 거야! (원피스)" },
       '4주차-2': { ja: "まけを しって もっと つよくなれる。", ko: "패배를 알고 더 강해질 수 있어. (원피스)" },
@@ -324,10 +330,10 @@
       '7주차-2': { ja: "ゆめは かなう！", ko: "꿈은 이루어진다!" },
       '8주차-1': { ja: "ともだちは たからもの。", ko: "친구는 보물." },
       '8주차-2': { ja: "いっしょに あるこう。", ko: "함께 걸어가자." },
-      '9주차-1': { ja: "だれかと　たべる　ことが　すこし　すくいに　なる。", ko: "누군가와 함께 먹는 일이, 작은 위로가 된다.(심야식당)" },
+      '9주차-1': { ja: "だれかと たべる ことが すこし すくいに なる。", ko: "누군가와 함께 먹는 일이, 작은 위로가 된다.(심야식당)" },
       '9주차-2': { ja: "すきな ことを つづけよう。", ko: "좋아하는 일을 계속하자." },
-      '10주차-1': { ja: "いきてるだけで　いみが　あるんだよね。", ko: "살아 있는 것만으로도 의미가 있는 거지(1리터의 눈물)" },
-      '10주차-2': { ja: "ぼくは　そんなに　つよく　ないよ。ただ、みんなが　おうえんして　くれるから、　がんばれるだけなんだ。", ko: "나는 그렇게 강하지 않아. 그저, 모두가 응원해줘서 열심히 할 수 있을 뿐이야.(호빵맨)!" }
+      '10주차-1': { ja: "いきてるだけで いみが あるんだよね。", ko: "살아 있는 것만으로도 의미가 있는 거지(1리터의 눈물)" },
+      '10주차-2': { ja: "ぼくは そんなに つよく ないよ。ただ、みんなが おうえんして くれるから、 がんばれるだけなんだ。", ko: "나는 그렇게 강하지 않아. 그저, 모두가 응원해줘서 열심히 할 수 있을 뿐이야.(호빵맨)!" }
     };
 
     let currentWeekKey = '';
@@ -382,10 +388,20 @@
       document.getElementById('loginCard').style.display = 'none';
       const badge = document.getElementById('studentBadge');
       badge.innerText = `${studentInfo.num} ${studentInfo.name} 학생`;
-      badge.style.display = 'block';
+      
+      // 로그아웃 버튼 포함 영역 표시
+      document.getElementById('userArea').style.display = 'flex';
 
       document.getElementById('buttonContainer').style.display = 'grid';
       renderButtons();
+    }
+
+    // 학생 정보 및 학습 내용 초기화(로그아웃)
+    function resetUser() {
+      if (confirm("학습 기록 및 저장된 학생 정보를 완전히 초기화하시겠습니까?")) {
+        localStorage.clear();
+        location.reload();
+      }
     }
 
     function renderButtons() {
