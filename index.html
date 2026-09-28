@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>일본어 가나 문장 쓰기 연습</title>
+  <style>
+    :root {
+      --primary-color: #FF8A98;
+      --secondary-color: #FFD166;
+      --bg-color: #FFF9F0;
+      --success-color: #2ECC71;
+      --error-color: #E74C3C;
+    }
+    body {
+      font-family: 'Hiragino Sans', 'Meiryo', 'Helvetica Neue', sans-serif;
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .mascot-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .mascot-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background-color: #fff;
+      border: 3px solid var(--primary-color);
+    }
+    /* 캐릭터 변경 버튼 */
+    .change-photo-btn {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #666;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 3px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    h1 {
+      font-size: 1.3rem;
+      color: #4A4A4A;
+      text-align: center;
+      margin: 8px 0 5px 0;
+    }
+    .student-badge {
+      font-size: 0.95rem;
+      color: var(--primary-color);
+      font-weight: bold;
+      background: #fff;
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--primary-color);
+    }
+
+    .login-card {
+      background: #fff;
+      padding: 25px 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 2px solid #FFE0E6;
+      border-radius: 10px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      outline: none;
+    }
+    .input-field:focus { border-color: var(--primary-color); }
+    .start-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 30px;
+    }
+    .week-btn {
+      position: relative;
+      padding: 14px 8px;
+      background-color: #fff;
+      border: 2px solid var(--primary-color);
+      color: #555;
+      border-radius: 14px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.04);
+    }
+    .week-btn.completed {
+      background-color: #E8F8F5;
+      border-color: var(--success-color);
+      color: #27AE60;
+    }
+    .week-btn .stamp-badge {
+      position: absolute;
+      top: -6px; right: -6px;
+      background: #E74C3C;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+    .modal-content {
+      position: relative;
+      background: #fff;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-sizing: border-box;
+      text-align: center;
+      overflow: hidden;
+    }
+    .popup-mascot {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      margin-bottom: 8px;
+      object-fit: cover;
+      border: 2px solid var(--primary-color);
+    }
+    .sentence-display {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2C3E50;
+      margin: 10px 0 6px 0;
+      line-height: 1.5;
+      word-break: keep-all;
+      background: #FFF5F6;
+      padding: 12px;
+      border-radius: 12px;
+    }
+    .translation-display {
+      font-size: 0.9rem;
+      color: #7F8C8D;
+      margin-bottom: 12px;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 10px;
+      border: 2px solid #FFE0E6;
+      border-radius: 10px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      resize: none;
+      outline: none;
+    }
+    .feedback-msg {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      min-height: 28px;
+    }
+    .feedback-msg.error { color: var(--error-color); }
+    .feedback-msg.success { color: var(--success-color); }
+
+    .completion-stamp {
+      display: none;
+      position: absolute;
+      top: 40px; right: 20px;
+      width: 100px; height: 100px;
+      border: 4px double #E74C3C;
+      border-radius: 50%;
+      color: #E74C3C;
+      font-size: 0.85rem;
+      font-weight: bold;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      transform: rotate(-15deg);
+      background-color: rgba(255,255,255,0.85);
+      pointer-events: none;
+    }
+    .completion-stamp.show { display: flex; }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .check-btn {
+      flex: 2; padding: 12px;
+      background: var(--primary-color);
+      color: #fff; border: none;
+      border-radius: 10px; font-size: 1rem;
+      font-weight: bold; cursor: pointer;
+    }
+    .close-btn {
+      flex: 1; padding: 12px;
+      background: #BDC3C7;
+      color: #fff; border: none;
+      border-radius: 10px; font-size: 1rem;
+      font-weight: bold; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-container">
+    <div class="mascot-wrapper">
+      <!-- 기본 이미지 또는 등록된 이미지 -->
+      <img class="mascot-img" id="mascotImg" src="watermarked_img_11693262011467889115.png" alt="마스코트">
+    </div>
+    <!-- 이미지 업로드 input (숨김 처리 후 버튼으로 연결) -->
+    <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="uploadMascot(event)">
+    <button class="change-photo-btn" onclick="document.getElementById('imageInput').click()">📷 캐릭터 변경</button>
+
+    <h1>✨ 10주 완성 가나 쓰기 연습</h1>
+    <div id="studentBadge" class="student-badge" style="display: none;"></div>
+  </div>
+
+  <!-- 학번/이름 입력 화면 -->
+  <div class="login-card" id="loginCard">
+    <h3 style="margin-top: 0; color: #4A4A4A;">학생 정보 입력</h3>
+    <input type="text" id="studentNum" class="input-field" placeholder="학번 (예: 10101)">
+    <input type="text" id="studentName" class="input-field" placeholder="이름 (예: 홍길동)">
+    <button class="start-btn" onclick="startPractice()">학습 시작하기</button>
+  </div>
+
+  <!-- 주차별 선택 메인 화면 -->
+  <div class="week-grid" id="buttonContainer" style="display: none;"></div>
+
+  <!-- 팝업 모달 -->
+  <div class="modal-overlay" id="practiceModal">
+    <div class="modal-content">
+      <div class="completion-stamp" id="stampMark">
+        たいへん<br>よくできました💮
+      </div>
+
+      <img class="popup-mascot" id="popupMascotImg" src="watermarked_img_11693262011467889115.png" alt="마스코트">
+      <h3 id="weekTitle" style="margin: 0; color:var(--primary-color);"></h3>
+      <div class="sentence-display" id="japaneseText"></div>
+      <div class="translation-display" id="koreanText"></div>
+      
+      <textarea id="userInput" placeholder="히라가나/가타카나로 따라 써 보세요!"></textarea>
+      
+      <div class="feedback-msg" id="feedbackMsg"></div>
+
+      <div class="btn-group">
+        <button class="check-btn" onclick="checkAnswer()">확인하기</button>
+        <button class="close-btn" onclick="closeModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sentences = {
+      '1주차-1': { ja: "あきらめたら そこで しあい しゅうりょうですよ。", ko: "포기하면 거기서 시합 종료예요. (슬램耽刻)" },
+      '1주차-2': { ja: "いきてる だけで、まるもうけ。", ko: "살아있는 것만으로도 남는 장사." },
+      '2주차-1': { ja: "にげちゃダメだ、にげちゃダメだ。", ko: "도망치면 안 돼, 도망치면 안 돼." },
+      '2주차-2': { ja: "くもの むこうは、いつも あおぞら。", ko: "구름 너머는 언제나 푸른 하늘." },
+      '3주차-1': { ja: "なんでも ない や。", ko: "아무것도 아니야. (너의 이름은.)" },
+      '3주차-2': { ja: "きみの なまえは？", ko: "너의 이름은? (너의 이름은.)" },
+      '4주차-1': { ja: "かいぞくおうに おれは なる！", ko: "나는 해적왕이 될 거야! (원피스)" },
+      '4주차-2': { ja: "まけを しって もっと つよくなれる。", ko: "패배를 알고 더 강해질 수 있어. (원피스)" },
+      '5주차-1': { ja: "こころを もやせ！", ko: "마음을 불태워라! (귀멸의 칼날)" },
+      '5주차-2': { ja: "ぜんりょくで たのしもう！", ko: "전력으로 즐겨보자!" },
+      '6주차-1': { ja: "きょうも いちにち おつかれさま。", ko: "오늘 하루도 수고했어." },
+      '6주차-2': { ja: "あしたは あしたの かぜが ふく。", ko: "내일은 내일의 바람이 분다." },
+      '7주차-1': { ja: "だいじょうぶ、きっと うまく いくよ。", ko: "괜찮아, 틀림없이 잘 될 거야." },
+      '7주차-2': { ja: "ゆめは かなう！", ko: "꿈은 이루어진다!" },
+      '8주차-1': { ja: "ともだちは たからもの。", ko: "친구는 보물." },
+      '8주차-2': { ja: "いっしょに あるこう。", ko: "함께 걸어가자." },
+      '9주차-1': { ja: "きみの すきな ものは なに？", ko: "네가 좋아하는 것은 뭐야?" },
+      '9주차-2': { ja: "すきな ことを つづけよう。", ko: "좋아하는 일을 계속하자." },
+      '10주차-1': { ja: "さいごまで がんばったね！", ko: "마지막까지 열심히 했네!" },
+      '10주차-2': { ja: "すばらしい ちょうせんでした！", ko: "멋진 도전이었습니다!" }
+    };
+
+    let currentWeekKey = '';
+    let studentInfo = { num: '', name: '' };
+
+    window.onload = function() {
+      // 커스텀 마스코트 불러오기
+      const savedMascot = localStorage.getItem('custom_mascot');
+      if (savedMascot) {
+        document.getElementById('mascotImg').src = savedMascot;
+        document.getElementById('popupMascotImg').src = savedMascot;
+      }
+
+      // 학생 정보 불러오기
+      const savedInfo = JSON.parse(localStorage.getItem('student_info') || 'null');
+      if (savedInfo) {
+        studentInfo = savedInfo;
+        showMainApp();
+      }
+    };
+
+    // 캐릭터 이미지 업로드 처리
+    function uploadMascot(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const result = e.target.result;
+          document.getElementById('mascotImg').src = result;
+          document.getElementById('popupMascotImg').src = result;
+          localStorage.setItem('custom_mascot', result); // 이미지 데이터 로컬 저장
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function startPractice() {
+      const num = document.getElementById('studentNum').value.trim();
+      const name = document.getElementById('studentName').value.trim();
+
+      if (!num || !name) {
+        alert('학번과 이름을 모두 입력해주세요!');
+        return;
+      }
+
+      studentInfo = { num, name };
+      localStorage.setItem('student_info', JSON.stringify(studentInfo));
+      showMainApp();
+    }
+
+    function showMainApp() {
+      document.getElementById('loginCard').style.display = 'none';
+      const badge = document.getElementById('studentBadge');
+      badge.innerText = `${studentInfo.num} ${studentInfo.name} 학생`;
+      badge.style.display = 'block';
+
+      document.getElementById('buttonContainer').style.display = 'grid';
+      renderButtons();
+    }
+
+    function renderButtons() {
+      const container = document.getElementById('buttonContainer');
+      container.innerHTML = '';
+      
+      Object.keys(sentences).forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'week-btn';
+        btn.id = `btn-${key}`;
+        
+        const savedData = JSON.parse(localStorage.getItem(`kana_practice_${studentInfo.num}_${key}`) || '{}');
+        
+        if (savedData.completed) {
+          btn.classList.add('completed');
+          btn.innerHTML = `${key} <span class="stamp-badge">💮완료</span>`;
+        } else {
+          btn.innerText = key;
+        }
+
+        btn.onclick = () => openPractice(key);
+        container.appendChild(btn);
+      });
+    }
+
+    function openPractice(weekKey) {
+      currentWeekKey = weekKey;
+      const data = sentences[weekKey];
+      if (!data) return;
+
+      document.getElementById('weekTitle').innerText = weekKey;
+      document.getElementById('japaneseText').innerText = data.ja;
+      document.getElementById('koreanText').innerText = data.ko;
+      
+      const savedData = JSON.parse(localStorage.getItem(`kana_practice_${studentInfo.num}_${weekKey}`) || '{}');
+      document.getElementById('userInput').value = savedData.input || '';
+      
+      const feedback = document.getElementById('feedbackMsg');
+      const stamp = document.getElementById('stampMark');
+      
+      if (savedData.completed) {
+        feedback.className = 'feedback-msg success';
+        feedback.innerText = 'SEIKOU! (성공!)';
+        stamp.classList.add('show');
+      } else {
+        feedback.className = 'feedback-msg';
+        feedback.innerText = '';
+        stamp.classList.remove('show');
+      }
+
+      document.getElementById('practiceModal').style.display = 'flex';
+    }
+
+    function checkAnswer() {
+      const userText = document.getElementById('userInput').value.trim();
+      const targetText = sentences[currentWeekKey].ja.trim();
+      const feedback = document.getElementById('feedbackMsg');
+      const stamp = document.getElementById('stampMark');
+
+      const cleanUserText = userText.replace(/\s+/g, '');
+      const cleanTargetText = targetText.replace(/\s+/g, '');
+
+      if (cleanUserText === cleanTargetText && cleanUserText !== '') {
+        feedback.className = 'feedback-msg success';
+        feedback.innerText = 'SEIKOU! (성공!)';
+        stamp.classList.add('show');
+
+        localStorage.setItem(`kana_practice_${studentInfo.num}_${currentWeekKey}`, JSON.stringify({
+          input: userText,
+          completed: true
+        }));
+
+        renderButtons();
+      } else {
+        feedback.className = 'feedback-msg error';
+        feedback.innerText = 'もういちど！ (한 번 더!)';
+        stamp.classList.remove('show');
+
+        localStorage.setItem(`kana_practice_${studentInfo.num}_${currentWeekKey}`, JSON.stringify({
+          input: userText,
+          completed: false
+        }));
+      }
+    }
+
+    function closeModal() {
+      const userText = document.getElementById('userInput').value;
+      const savedData = JSON.parse(localStorage.getItem(`kana_practice_${studentInfo.num}_${currentWeekKey}`) || '{}');
+      
+      localStorage.setItem(`kana_practice_${studentInfo.num}_${currentWeekKey}`, JSON.stringify({
+        input: userText,
+        completed: savedData.completed || false
+      }));
+
+      document.getElementById('practiceModal').style.display = 'none';
+      renderButtons();
+    }
+  </script>
+</body>
+</html>
